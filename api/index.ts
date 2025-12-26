@@ -21,9 +21,7 @@ app.use(bodyParser.json());
 
 /* -------------------- MongoDB -------------------- */
 mongoose
-  .connect('mongodb+srv://ironpotter2005:ironpotter@cluster0.hhsfu1c.mongodb.net/')
-  .then(() => console.log('Connected to Mongo Db'))
-  .catch(err => console.log('Error connecting to MongoDb', err));
+
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on port ${port}`);
