@@ -1,13 +1,13 @@
+import { RouteProp, useRoute } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
 import {
+  Image,
+  SafeAreaView,
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
-  Image,
 } from 'react-native';
-import React, { useRef, useEffect, useState } from 'react';
-import { useRoute } from '@react-navigation/native';
-import MapView, { Marker, LatLng } from 'react-native-maps';
+import MapView, { LatLng, Marker } from 'react-native-maps';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 /* ----------------------------------
@@ -34,8 +34,10 @@ interface MapRouteParams {
    Component
 ----------------------------------- */
 
+type MapScreenRouteProp = RouteProp<{ Map: MapRouteParams }, 'Map'>;
+
 const MapScreen: React.FC = () => {
-  const route = useRoute<{ params: MapRouteParams }>();
+  const route = useRoute<MapScreenRouteProp>();
 
   const places: Place[] = route.params?.places || [];
   const firstPlace = places[0];
@@ -74,7 +76,7 @@ const MapScreen: React.FC = () => {
   ----------------------------------- */
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <MapView
         loadingEnabled
         ref={mapView}

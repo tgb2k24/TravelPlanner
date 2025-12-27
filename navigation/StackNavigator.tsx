@@ -37,7 +37,7 @@ export type RootStackParamList = {
     itinerary: any[];
     onGoBack?: () => void;
   };
-  Map: undefined;
+  Map: { places: any[] };
   Ai: undefined;
 };
 
