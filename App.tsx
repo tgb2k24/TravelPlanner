@@ -36,7 +36,19 @@ if (typeof (BackHandler as any).removeEventListener !== 'function') {
 // Ensure AntDesign font is loaded to avoid missing glyph warnings
 AntDesign.loadFont();
 
+import { useFonts } from 'expo-font';
+
+// ...
+
 const App: React.FC = () => {
+  const [fontsLoaded] = useFonts({
+    'PlayfairDisplay': require('./assets/fonts/PlayfairDisplay-VariableFont_wght.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <AuthProvider>
       <StackNavigator />

@@ -4,11 +4,12 @@ import Voice, { SpeechResultsEvent } from '@react-native-voice/voice';
 // Mock Voice removed. Ensure package is installed.
 
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
     ActivityIndicator,
     Alert,
     FlatList,
+    Image,
     ImageBackground,
     KeyboardAvoidingView,
     Linking,
@@ -23,6 +24,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { generateSystemPrompt, sendChatRequest } from '../api/aiService';
 import { AuthContext } from '../AuthContext';
 import { API_URL } from '../constants/config';
 import { RootStackParamList } from '../navigation/StackNavigator';
@@ -42,17 +44,13 @@ type Message = {
     timestamp: number;
 };
 
-import { generateSystemPrompt, sendChatRequest } from '../api/aiService';
-
-
-
 const AiScreen: React.FC = () => {
     const navigation = useNavigation();
     const route = useRoute<AiScreenRouteProp>();
 
     // Cast params to include tripId if it's not in the type definition yet
     const { name, tripId } = (route.params || {}) as AiParams;
-    const { userId } = React.useContext(AuthContext);
+    const { userId } = useContext(AuthContext);
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputText, setInputText] = useState('');
@@ -154,9 +152,11 @@ const AiScreen: React.FC = () => {
     const toggleListening = async () => {
         try {
             if (isListening) {
+                console.log("Stopping voice...");
                 await Voice.stop();
                 setIsListening(false);
             } else {
+                console.log("Requesting permission...");
                 const hasPermission = await requestVoicePermission();
                 if (!hasPermission) {
                     Alert.alert(
@@ -170,33 +170,36 @@ const AiScreen: React.FC = () => {
                     return;
                 }
 
+                console.log("Starting voice...");
                 // Clear any existing session before starting
                 await Voice.destroy();
 
                 try {
                     await Voice.start('en-US');
                     setIsListening(true);
-                } catch (startError) {
+                } catch (startError: any) {
                     console.error("Voice start error", startError);
                     setIsListening(false);
+                    Alert.alert("Voice Error", `Failed to start: ${startError.message || startError}`);
                 }
             }
-        } catch (e) {
-            console.error(e);
+        } catch (e: any) {
+            console.error("Toggle listening error", e);
             setIsListening(false);
-            Alert.alert('Voice Error', 'Could not start voice recognition.');
+            Alert.alert('Voice Error', `Could not toggle voice: ${e.message || e}`);
         }
     };
 
     const onSpeechError = (e: any) => {
+        console.log('Voice Error Event:', e);
         // Ignore "No match" error (Code 7) as it just means silence/unrecognized speech
         if (e.error?.code === '7' || e.error?.message?.includes('7/No match')) {
             setIsListening(false);
             return;
         }
 
-        console.error('Voice Error:', e);
         setIsListening(false);
+        Alert.alert("Speech Recognition Error", JSON.stringify(e.error));
     };
 
     const clearChatHistory = async () => {
@@ -258,7 +261,6 @@ const AiScreen: React.FC = () => {
         }
     };
 
-
     const sendMessage = async () => {
         if (!inputText.trim()) return;
 
@@ -309,10 +311,52 @@ const AiScreen: React.FC = () => {
 
         } catch (error) {
             console.error(error);
-            Alert.alert("Network Error", "Could not connect to AI service.");
+            Alert.alert("Network Error", `Could not connect to AI service: ${error instanceof Error ? error.message : 'Unknown error'}`);
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const renderMessageContent = (content: string, textStyle: any) => {
+        const parts = [];
+        let lastIndex = 0;
+        const regex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+        let match;
+
+        while ((match = regex.exec(content)) !== null) {
+            // Text before image
+            if (match.index > lastIndex) {
+                parts.push(
+                    <Text key={`text-${lastIndex}`} style={textStyle}>
+                        {content.substring(lastIndex, match.index)}
+                    </Text>
+                );
+            }
+
+            // Image
+            const imageUrl = match[2];
+            parts.push(
+                <Image
+                    key={`img-${match.index}`}
+                    source={{ uri: imageUrl }}
+                    style={{ width: 250, height: 150, borderRadius: 10, marginVertical: 8 }}
+                    resizeMode="cover"
+                />
+            );
+
+            lastIndex = match.index + match[0].length;
+        }
+
+        // Remaining text
+        if (lastIndex < content.length) {
+            parts.push(
+                <Text key={`text-${lastIndex}`} style={textStyle}>
+                    {content.substring(lastIndex)}
+                </Text>
+            );
+        }
+
+        return parts.length > 0 ? parts : <Text style={textStyle}>{content}</Text>;
     };
 
     const renderItem = ({ item }: { item: Message }) => {
@@ -322,9 +366,7 @@ const AiScreen: React.FC = () => {
                 styles.messageBubble,
                 isUser ? styles.userBubble : styles.aiBubble
             ]}>
-                <Text style={[styles.messageText, isUser ? styles.userText : styles.aiText]}>
-                    {item.content}
-                </Text>
+                {renderMessageContent(item.content, [styles.messageText, isUser ? styles.userText : styles.aiText])}
             </View>
         );
     };
@@ -359,7 +401,7 @@ const AiScreen: React.FC = () => {
 
                 <KeyboardAvoidingView
                     style={{ flex: 1 }}
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                     keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
                 >
                     {/* Chat List */}
@@ -414,7 +456,7 @@ const styles = StyleSheet.create({
     },
     safeArea: {
         flex: 1,
-        backgroundColor: 'rgba(255,255,255,0.5)', // Optional: overlay to ensure text readability
+        backgroundColor: 'rgba(255,255,255,0.5)',
     },
     header: {
         flexDirection: 'row',
@@ -424,7 +466,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderBottomWidth: 1,
         borderBottomColor: 'rgba(0,0,0,0.1)',
-        backgroundColor: 'rgba(255,255,255,0.7)', // Semi-transparent header
+        backgroundColor: 'rgba(255,255,255,0.7)',
     },
     headerTitle: {
         fontSize: 18,
@@ -461,6 +503,7 @@ const styles = StyleSheet.create({
     },
     aiText: {
         color: '#333',
+        fontFamily: 'PlayfairDisplay',
     },
     inputContainer: {
         flexDirection: 'row',

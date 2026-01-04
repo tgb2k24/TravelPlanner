@@ -118,7 +118,7 @@ const LoginScreen: React.FC = () => {
       setToken(token);
     } catch (err: unknown) {
       console.log('Login Error:', err);
-      setError('Google login failed');
+      setError(err instanceof Error ? err.message : JSON.stringify(err));
     } finally {
       setLoading(false);
     }

@@ -21,6 +21,7 @@
     "axios": "^1.7.2",
     "core-js": "^3.38.1",
     "expo": "^54.0.29",
+    "expo-font": "~13.0.4",
     "expo-router": "^6.0.19",
     "expo-splash-screen": "^31.0.12",
     "jwt-decode": "^4.0.0",
