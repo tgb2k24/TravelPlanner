@@ -19,6 +19,7 @@ import MapScreen from '../screens/MapScreen';
 import NewActivity from '../screens/NewActivity';
 import RegisterScreen from '../screens/RegisterScreen';
 import RestaurantsScreen from '../screens/Restaurants';
+import SettingsScreen from '../screens/Settings';
 import TripPlanScreen from '../screens/TripPlanScreen';
 import TripScreen from '../screens/TripScreen';
 
@@ -42,6 +43,7 @@ export type RootStackParamList = {
   EmailAuth: { isSignUp?: boolean } | undefined;
   Restaurants: { location: string } | undefined;
   Cafe: { location: string } | undefined;
+  Settings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -95,6 +97,7 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen name="Ai" component={AiScreen} />
       <Stack.Screen name="Restaurants" component={RestaurantsScreen} />
       <Stack.Screen name="Cafe" component={CafeScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
     </Stack.Navigator>
   );
 

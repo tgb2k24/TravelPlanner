@@ -22,6 +22,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AuthContext } from '../AuthContext';
 import { API_URL } from '../constants/config';
 import { RootStackParamList } from '../navigation/StackNavigator';
+import { useTheme } from '../ThemeContext';
 
 /* ----------------------------------
    Types & Interfaces
@@ -179,8 +180,13 @@ const HomeScreen: React.FC = () => {
     }
   };
 
+  /* ----------------------------------
+     Hook
+  ----------------------------------- */
+  const { theme, colors } = useTheme();
+
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       <SafeAreaView style={{ flex: 1 }}>
         <Modal
           animationType="fade"
@@ -188,9 +194,9 @@ const HomeScreen: React.FC = () => {
           visible={deleteModalVisible}
           onRequestClose={() => setDeleteModalVisible(false)}>
           <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Delete Trip</Text>
-              <Text style={styles.modalDescription}>
+            <View style={[styles.modalView, { backgroundColor: colors.card }]}>
+              <Text style={[styles.modalText, { color: colors.text }]}>Delete Trip</Text>
+              <Text style={[styles.modalDescription, { color: theme === 'dark' ? '#ccc' : '#666' }]}>
                 Are you sure you want to delete this trip?
               </Text>
               <View style={styles.modalButtons}>
@@ -214,16 +220,18 @@ const HomeScreen: React.FC = () => {
           <View style={styles.header}>
             <Ionicons onPress={logout} name="person" size={30} color="orange" />
             <View style={styles.headerIcons}>
-              <AntDesign name="search" size={30} color="orange" />
               <Pressable onPress={() => navigation.navigate('Create')}>
                 <AntDesign name="plus" size={30} color="orange" />
+              </Pressable>
+              <Pressable onPress={() => navigation.navigate('Settings')}>
+                <AntDesign name="setting" size={30} color="orange" />
               </Pressable>
             </View>
           </View>
 
           {/* Title */}
           <View style={{ padding: 10 }}>
-            <Text style={styles.title}>My Trips</Text>
+            <Text style={[styles.title, { color: colors.text }]}>My Trips</Text>
             <Text style={styles.year}>{currentYear}</Text>
           </View>
 
@@ -257,7 +265,7 @@ const HomeScreen: React.FC = () => {
 
           {/* CTA */}
           <View style={styles.cta}>
-            <Text style={styles.ctaTitle}>Organize your next trip</Text>
+            <Text style={[styles.ctaTitle, { color: colors.text }]}>Organize your next trip</Text>
             <Text style={styles.ctaDesc}>
               Create your next trip and plan the activities of your itinerary
             </Text>
@@ -319,7 +327,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   cta: {
-    marginTop: 20,
+    marginTop: 1,
     alignItems: 'center',
   },
   ctaTitle: {

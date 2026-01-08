@@ -16,6 +16,7 @@ import {
 import { BottomModal, ModalContent, SlideAnimation } from 'react-native-modals';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useTheme } from '../ThemeContext';
 
 /* ----------------------------------
    Navigation Types
@@ -66,9 +67,14 @@ const TripScreen: React.FC = () => {
       { id: '12', name: 'Theatre', image: 'https://cdn-icons-png.flaticon.com/128/9921/9921891.png' },
     ];
 
+  /* ----------------------------------
+     Hook
+  ----------------------------------- */
+  const { theme, colors } = useTheme();
+
   return (
     <>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
         <ImageBackground
           style={{ width: '100%', height: '100%' }}
           source={{ uri: route?.params?.item?.background }}>
@@ -133,8 +139,8 @@ const TripScreen: React.FC = () => {
         swipeThreshold={200}
         modalAnimation={new SlideAnimation({ slideFrom: 'bottom' })}>
         <ModalContent
-          style={{ width: '100%', height: 600, backgroundColor: '#F8F8F8' }}>
-          <Text style={{ textAlign: 'center' }}>Choose an Activity</Text>
+          style={{ width: '100%', height: 600, backgroundColor: colors.card }}>
+          <Text style={{ textAlign: 'center', color: colors.text }}>Choose an Activity</Text>
 
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {data.map(item => (
@@ -151,7 +157,7 @@ const TripScreen: React.FC = () => {
                   width: 95,
                   height: 95,
                   borderRadius: 6,
-                  backgroundColor: 'white',
+                  backgroundColor: theme === 'dark' ? '#333' : 'white',
                   justifyContent: 'center',
                   alignItems: 'center',
                   margin: 10,
@@ -160,7 +166,7 @@ const TripScreen: React.FC = () => {
                   style={{ width: 40, height: 40 }}
                   source={{ uri: item.image }}
                 />
-                <Text style={{ fontSize: 12, marginTop: 12 }}>
+                <Text style={{ fontSize: 12, marginTop: 12, color: colors.text }}>
                   {item.name}
                 </Text>
               </Pressable>

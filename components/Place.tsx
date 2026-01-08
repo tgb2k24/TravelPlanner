@@ -3,6 +3,7 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTheme } from '../ThemeContext';
 
 /* ---------- Types ---------- */
 
@@ -28,6 +29,8 @@ interface PlaceProps {
 /* ---------- Component ---------- */
 
 const Place: React.FC<PlaceProps> = ({ item, items, setItems, index, onRemove }) => {
+  const { theme, colors } = useTheme();
+
   const choosePlaces = (name: string) => {
     setItems(prevItems =>
       prevItems.includes(name)
@@ -68,7 +71,7 @@ const Place: React.FC<PlaceProps> = ({ item, items, setItems, index, onRemove })
 
             <Text
               numberOfLines={2}
-              style={{ fontSize: 16, fontWeight: '500', width: '82%', color: '#202020' }}
+              style={{ fontSize: 16, fontWeight: '500', width: '82%', color: colors.text }}
             >
               {item.name}
             </Text>
@@ -77,7 +80,7 @@ const Place: React.FC<PlaceProps> = ({ item, items, setItems, index, onRemove })
           {item.briefDescription && (
             <Text
               numberOfLines={3}
-              style={{ color: 'gray', marginTop: 7, width: '80%' }}
+              style={{ color: theme === 'dark' ? '#aaa' : 'gray', marginTop: 7, width: '80%' }}
             >
               {item.briefDescription}
             </Text>

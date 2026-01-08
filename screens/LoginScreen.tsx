@@ -19,6 +19,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { AuthContext } from '../AuthContext';
 import { API_URL, GOOGLE_WEB_CLIENT_ID } from '../constants/config';
 import { RootStackParamList } from '../navigation/StackNavigator';
+import { useTheme } from '../ThemeContext';
 
 /* ----------------------------------
    Types
@@ -125,10 +126,15 @@ const LoginScreen: React.FC = () => {
   };
 
   /* ----------------------------------
+     Hook
+  ----------------------------------- */
+  const { colors } = useTheme();
+
+  /* ----------------------------------
      UI
   ----------------------------------- */
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={{ marginTop: 30, alignItems: 'center' }}>
         <Image
           style={{ width: 240, height: 80, resizeMode: 'contain' }}
@@ -138,28 +144,28 @@ const LoginScreen: React.FC = () => {
 
       <View style={{ marginTop: 70 }}>
         {/* Facebook Button */}
-        <View style={styles.socialButton}>
+        <View style={[styles.socialButton, { borderColor: colors.border, backgroundColor: colors.card }]}>
           <AntDesign
             style={styles.leftIcon}
             name="facebook"
             size={24}
             color="blue"
           />
-          <Text style={styles.socialText}>Sign Up With Facebook</Text>
+          <Text style={[styles.socialText, { color: colors.text }]}>Sign Up With Facebook</Text>
         </View>
 
         {/* Google Button */}
         <Pressable
           onPress={handleGoogleLogin}
           disabled={loading}
-          style={styles.socialButton}>
+          style={[styles.socialButton, { borderColor: colors.border, backgroundColor: colors.card }]}>
           <AntDesign
             style={styles.leftIcon}
             name="google"
             size={24}
             color="red"
           />
-          <Text style={styles.socialText}>
+          <Text style={[styles.socialText, { color: colors.text }]}>
             {loading ? 'Signing In...' : 'Sign Up With Google'}
           </Text>
         </Pressable>
@@ -167,14 +173,14 @@ const LoginScreen: React.FC = () => {
         {/* Email Button */}
         <Pressable
           onPress={() => navigation.navigate('EmailAuth')}
-          style={styles.socialButton}>
+          style={[styles.socialButton, { borderColor: colors.border, backgroundColor: colors.card }]}>
           <AntDesign
             style={styles.leftIcon}
             name="mail"
             size={24}
-            color="black"
+            color={colors.text}
           />
-          <Text style={styles.socialText}>Sign Up With Email</Text>
+          <Text style={[styles.socialText, { color: colors.text }]}>Sign Up With Email</Text>
         </Pressable>
 
         {/* Error Message */}

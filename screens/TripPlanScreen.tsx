@@ -24,6 +24,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Place from '../components/Place';
 import { API_URL } from '../constants/config';
+import { useTheme } from '../ThemeContext';
 
 export type RootStackParamList = {
   Plan: { item: any; user: any }; // Match the name in StackNavigator
@@ -501,8 +502,10 @@ const TripPlanScreen = () => {
     }
   };
 
+  const { theme, colors } = useTheme();
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
 
@@ -515,7 +518,7 @@ const TripPlanScreen = () => {
             />
             <View
               style={{
-                backgroundColor: 'white',
+                backgroundColor: colors.card,
                 width: '90%',
                 marginTop: -80,
                 alignSelf: 'center',
@@ -534,17 +537,17 @@ const TripPlanScreen = () => {
                   textAlign: 'left',
                   fontSize: 22,
                   fontWeight: 'bold',
-                  color: '#202020',
+                  color: colors.text,
                 }}>
                 Trip To {tripName || route?.params?.item?.tripName || 'your Destination'}
               </Text>
               <View style={{ marginTop: 10 }}>
                 <View>
-                  <Text style={{ fontWeight: '500', color: '#202020', fontSize: 14 }}>
+                  <Text style={{ fontWeight: '500', color: colors.text, fontSize: 14 }}>
                     {formatDate(route?.params?.item?.startDate) || 'Start Date'} -{' '}
                     {formatDate(route?.params?.item?.endDate) || 'End Date'}
                   </Text>
-                  <Text style={{ color: '#606060', marginTop: 4, fontSize: 13 }}>
+                  <Text style={{ color: theme === 'dark' ? '#ccc' : '#606060', marginTop: 4, fontSize: 13 }}>
                     {route?.params?.item?.startDay || ''} -{' '}
                     {route?.params?.item?.endDay || ''}
                   </Text>
@@ -596,7 +599,7 @@ const TripPlanScreen = () => {
                 alignItems: 'center',
                 gap: 25,
                 justifyContent: 'space-around',
-                backgroundColor: 'white',
+                backgroundColor: colors.card,
                 padding: 12,
               }}>
               <Pressable onPress={() => setOption('Overview')}>
@@ -651,7 +654,7 @@ const TripPlanScreen = () => {
                   }}>
                   <View
                     style={{
-                      backgroundColor: 'white',
+                      backgroundColor: colors.card,
                       padding: 12,
                     }}>
                     <View
@@ -669,9 +672,9 @@ const TripPlanScreen = () => {
                         <MaterialIcons
                           name="keyboard-arrow-down"
                           size={25}
-                          color="black"
+                          color={colors.text}
                         />
-                        <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#202020' }}>
+                        <Text style={{ fontSize: 15, fontWeight: 'bold', color: colors.text }}>
                           Notes
                         </Text>
                       </View>
@@ -688,7 +691,7 @@ const TripPlanScreen = () => {
                         style={{
                           fontWeight: '500',
                           fontStyle: 'italic',
-                          color: '#606060',
+                          color: theme === 'dark' ? '#ccc' : '#606060',
                         }}>
                         Write or paste general notes here, e.g. how to get
                       </Text>
@@ -697,7 +700,7 @@ const TripPlanScreen = () => {
 
                   <View
                     style={{
-                      backgroundColor: 'white',
+                      backgroundColor: colors.card,
                       padding: 12,
                       marginVertical: 15,
                     }}>
@@ -716,9 +719,9 @@ const TripPlanScreen = () => {
                         <MaterialIcons
                           name="keyboard-arrow-down"
                           size={25}
-                          color="black"
+                          color={colors.text}
                         />
-                        <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#202020' }}>
+                        <Text style={{ fontSize: 15, fontWeight: 'bold', color: colors.text }}>
                           Places to Visit
                         </Text>
                       </View>
@@ -758,7 +761,7 @@ const TripPlanScreen = () => {
                         style={{
                           padding: 10,
                           borderRadius: 10,
-                          backgroundColor: '#F0F0F0',
+                          backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
                           flexDirection: 'row',
                           alignItems: 'center',
                           gap: 5,
@@ -770,7 +773,12 @@ const TripPlanScreen = () => {
                           color="gray"
                         />
 
-                        <TextInput style={{color:'black'}} placeholder="Add a place" editable={false} />
+                        <TextInput
+                          style={{ color: colors.text }}
+                          placeholder="Add a place"
+                          placeholderTextColor={theme === 'dark' ? '#aaa' : 'gray'}
+                          editable={false}
+                        />
                       </Pressable>
 
                       <View
@@ -778,14 +786,14 @@ const TripPlanScreen = () => {
                           width: 44,
                           height: 44,
                           borderRadius: 22,
-                          backgroundColor: '#F0F0F0',
+                          backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
                           justifyContent: 'center',
                           alignItems: 'center',
                         }}>
                         <MaterialIcons
                           name="attach-file"
                           size={22}
-                          color="black"
+                          color={colors.text}
                         />
                       </View>
 
@@ -799,14 +807,14 @@ const TripPlanScreen = () => {
                           width: 44,
                           height: 44,
                           borderRadius: 22,
-                          backgroundColor: '#F0F0F0',
+                          backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
                           justifyContent: 'center',
                           alignItems: 'center',
                         }}>
                         <MaterialCommunityIcons
                           name="map-check-outline"
                           size={22}
-                          color="black"
+                          color={colors.text}
                         />
                       </Pressable>
                     </View>
@@ -816,6 +824,7 @@ const TripPlanScreen = () => {
                         fontWeight: '500',
                         marginLeft: 10,
                         marginTop: 15,
+                        color: colors.text,
                       }}>
                       Recommended Places
                     </Text>
@@ -841,7 +850,7 @@ const TripPlanScreen = () => {
                                   alignItems: 'center',
                                   marginRight: 12,
                                   borderWidth: 1,
-                                  borderColor: '#E0E0E0',
+                                  borderColor: colors.border,
                                   borderRadius: 8,
                                   padding: 10,
                                   marginBottom: 10,
@@ -861,7 +870,7 @@ const TripPlanScreen = () => {
                                       resizeMode="cover"
                                     />
                                   ) : (
-                                    <Text>No Image Available</Text>
+                                    <Text style={{ color: colors.text }}>No Image Available</Text>
                                   )}
                                 </View>
                                 <Text
@@ -869,7 +878,7 @@ const TripPlanScreen = () => {
                                     flex: 1,
                                     fontSize: 16,
                                     fontWeight: '500',
-                                    color: '#333',
+                                    color: colors.text,
                                     width: 150,
                                   }}
                                   numberOfLines={2}
@@ -888,7 +897,7 @@ const TripPlanScreen = () => {
 
                   <View
                     style={{
-                      backgroundColor: 'white',
+                      backgroundColor: colors.card,
                       padding: 12,
                     }}>
                     <View
@@ -906,9 +915,9 @@ const TripPlanScreen = () => {
                         <MaterialIcons
                           name="keyboard-arrow-down"
                           size={25}
-                          color="black"
+                          color={colors.text}
                         />
-                        <Text style={{ fontSize: 15, fontWeight: 'bold' }}>
+                        <Text style={{ fontSize: 15, fontWeight: 'bold', color: colors.text }}>
                           Add a Title
                         </Text>
                       </View>
@@ -931,7 +940,7 @@ const TripPlanScreen = () => {
                         style={{
                           padding: 10,
                           borderRadius: 10,
-                          backgroundColor: '#F0F0F0',
+                          backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
                           flexDirection: 'row',
                           alignItems: 'center',
                           gap: 5,
@@ -943,22 +952,11 @@ const TripPlanScreen = () => {
                           color="gray"
                         />
 
-                        <TextInput style={{}} placeholder="Add a place" editable={false} />
-                      </View>
-
-                      <View
-                        style={{
-                          width: 44,
-                          height: 44,
-                          borderRadius: 22,
-                          backgroundColor: '#F0F0F0',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <MaterialIcons
-                          name="attach-file"
-                          size={22}
-                          color="black"
+                        <TextInput
+                          style={{ color: colors.text }}
+                          placeholder="Add a place"
+                          placeholderTextColor={theme === 'dark' ? '#aaa' : 'gray'}
+                          editable={false}
                         />
                       </View>
 
@@ -967,14 +965,30 @@ const TripPlanScreen = () => {
                           width: 44,
                           height: 44,
                           borderRadius: 22,
-                          backgroundColor: '#F0F0F0',
+                          backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <MaterialIcons
+                          name="attach-file"
+                          size={22}
+                          color={colors.text}
+                        />
+                      </View>
+
+                      <View
+                        style={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: 22,
+                          backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
                           justifyContent: 'center',
                           alignItems: 'center',
                         }}>
                         <MaterialCommunityIcons
                           name="map-check-outline"
                           size={22}
-                          color="black"
+                          color={colors.text}
                         />
                       </View>
                     </View>
@@ -1027,7 +1041,7 @@ const TripPlanScreen = () => {
                           padding: 10,
                           borderRadius: 8,
                           marginBottom: 7,
-                          backgroundColor: 'white',
+                          backgroundColor: colors.card,
                           marginVertical: 10,
 
                         }}>
@@ -1037,13 +1051,13 @@ const TripPlanScreen = () => {
                             alignItems: 'center',
                             gap: 8,
                           }}>
-                          <Text style={{ fontSize: 27, fontWeight: 'bold', color: '#202020' }}>
+                          <Text style={{ fontSize: 27, fontWeight: 'bold', color: colors.text }}>
                             {formatDate(item.date)}
                           </Text>
                           <Text
                             style={{
                               fontSize: 14,
-                              color: '#606060',
+                              color: theme === 'dark' ? '#ccc' : '#606060',
                               fontWeight: '500',
                             }}>
                             Add subheading
@@ -1098,7 +1112,7 @@ const TripPlanScreen = () => {
                                             style={{
                                               fontSize: 16,
                                               fontWeight: '500',
-                                              color: '#202020',
+                                              color: colors.text,
                                             }}>
                                             {activity?.name}{' '}
                                           </Text>
@@ -1146,7 +1160,7 @@ const TripPlanScreen = () => {
                             style={{
                               padding: 10,
                               borderRadius: 10,
-                              backgroundColor: '#F0F0F0',
+                              backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
                               flexDirection: 'row',
                               alignItems: 'center',
                               gap: 5,
@@ -1158,7 +1172,12 @@ const TripPlanScreen = () => {
                               color="gray"
                             />
 
-                            <TextInput style={{}} placeholder="Add a place" editable={false} />
+                            <TextInput
+                              style={{ color: colors.text }}
+                              placeholder="Add a place"
+                              placeholderTextColor={theme === 'dark' ? '#aaa' : 'gray'}
+                              editable={false}
+                            />
                           </Pressable>
 
                           <View
@@ -1166,14 +1185,14 @@ const TripPlanScreen = () => {
                               width: 44,
                               height: 44,
                               borderRadius: 22,
-                              backgroundColor: '#F0F0F0',
+                              backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
                               justifyContent: 'center',
                               alignItems: 'center',
                             }}>
                             <MaterialIcons
                               name="attach-file"
                               size={22}
-                              color="black"
+                              color={colors.text}
                             />
                           </View>
 
@@ -1187,14 +1206,14 @@ const TripPlanScreen = () => {
                               width: 44,
                               height: 44,
                               borderRadius: 22,
-                              backgroundColor: '#F0F0F0',
+                              backgroundColor: theme === 'dark' ? '#333' : '#F0F0F0',
                               justifyContent: 'center',
                               alignItems: 'center',
                             }}>
                             <MaterialCommunityIcons
                               name="map-check-outline"
                               size={22}
-                              color="black"
+                              color={colors.text}
                             />
                           </Pressable>
                         </View>
