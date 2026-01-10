@@ -59,6 +59,7 @@ export const generateSystemPrompt = (name: string, userDetails: any, tripDetails
        - Transport (best options for ${tripDetails?.travelers?.length || 1} people)
        - Entry Fees
     4. **Style**: FAIL-SAFE RULE: Do NOT use ANY emojis. Do NOT use special symbols like hashtags or asterisks. Keep text strictly professional, clean, and simple.
+    5. **Speech Optimized**: Do NOT include any behavioral descriptions or narration (like *thinking*, *smiling*, *pausing*). Output ONLY the spoken words.
     Help the user visualize their trip and manage their budget effectively.`;
 };
 

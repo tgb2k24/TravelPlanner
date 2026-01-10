@@ -8,14 +8,13 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RootStackParamList } from '../navigation/StackNavigator';
 
-/* ----------------------------------
-   Types
------------------------------------ */
+
 
 type ChooseImageNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -27,9 +26,7 @@ interface ImageItem {
   image: string;
 }
 
-/* ----------------------------------
-   Component
------------------------------------ */
+
 
 const ChooseImage: React.FC = () => {
   const images: ImageItem[] = [
@@ -93,24 +90,48 @@ const ChooseImage: React.FC = () => {
           <Text style={styles.title}>Choose Image</Text>
         </View>
 
-        <ScrollView>
-          <View style={styles.grid}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+          <View style={[styles.grid, { justifyContent: 'center' }]}>
             {images.map((item) => (
-              <Pressable
+              <RenderImageItem
                 key={item.id}
-                onPress={() => handleSelectImage(item.image)}
-                style={{ margin: 10 }}
-              >
-                <Image
-                  style={styles.image}
-                  source={{ uri: item.image }}
-                />
-              </Pressable>
+                item={item}
+                handleSelectImage={handleSelectImage}
+              />
             ))}
           </View>
         </ScrollView>
       </SafeAreaView>
     </View>
+  );
+};
+
+const RenderImageItem = ({
+  item,
+  handleSelectImage,
+}: {
+  item: ImageItem;
+  handleSelectImage: (img: string) => void;
+}) => {
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
+  const numColumns = isLandscape ? 5 : 3;
+  const margin = 10;
+  const itemTotalMargin = margin * 2;
+  // Calculate width: entire screen width divided by columns, minus the margins for each item
+  const imageWidth = width / numColumns - itemTotalMargin;
+  const imageHeight = imageWidth * 1.35; // Maintain aspect ratio
+
+  return (
+    <Pressable
+      onPress={() => handleSelectImage(item.image)}
+      style={{ margin }}
+    >
+      <Image
+        style={[styles.image, { width: imageWidth, height: imageHeight }]}
+        source={{ uri: item.image }}
+      />
+    </Pressable>
   );
 };
 
@@ -130,12 +151,10 @@ const styles = StyleSheet.create({
   },
   grid: {
     flexDirection: 'row',
-    alignItems: 'center',
     flexWrap: 'wrap',
+    alignItems: 'flex-start', // varied from center to avoid odd gaps if last row isn't full
   },
   image: {
-    width: 118,
-    height: 160,
     resizeMode: 'cover',
     borderRadius: 15,
   },

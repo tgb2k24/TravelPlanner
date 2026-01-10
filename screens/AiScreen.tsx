@@ -270,7 +270,7 @@ const AiScreen: React.FC = () => {
                     timestamp: Date.now(),
                 };
 
-                // Fetch place image if 'name' (destination) is available
+ 
                 let placeImageUrl = undefined;
                 if (name) {
                     try {
@@ -344,13 +344,13 @@ const AiScreen: React.FC = () => {
         saveHistory(updatedMessages);
         setIsLoading(true);
 
-        // Scroll to bottom
+
         setTimeout(() => flatListRef.current?.scrollToEnd({ animated: true }), 100);
 
         try {
             const systemPrompt = generateSystemPrompt(name || 'Trip', userDetails, tripDetails);
 
-            // Construct the full message history for the AI, including the system prompt
+
             const apiMessages: any[] = [
                 { role: 'system', content: systemPrompt },
                 ...updatedMessages.map(m => ({ role: m.role, content: m.content }))

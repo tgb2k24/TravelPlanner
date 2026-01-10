@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { AuthContext } from '../AuthContext';
@@ -277,6 +278,27 @@ const HomeScreen: React.FC = () => {
             </Pressable>
           </View>
         </ScrollView>
+        <Pressable
+          onPress={() => navigation.navigate('AiAgent')}
+          style={{
+            width: 60,
+            height: 60,
+            borderRadius: 40,
+            justifyContent: 'center',
+            backgroundColor: '#662d91',
+            marginLeft: 'auto',
+            position: 'absolute',
+            bottom: 50,
+            right: 25,
+            alignContent: 'center',
+          }}>
+          <FontAwesome6
+            style={{ textAlign: 'center' }}
+            name="wand-magic-sparkles"
+            size={24}
+            color="white"
+          />
+        </Pressable>
       </SafeAreaView>
     </View>
   );

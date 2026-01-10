@@ -7,6 +7,7 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
+import AiAgent from '../screens/AgenticAI/AiAgent';
 import AiScreen from '../screens/AiScreen';
 import CafeScreen from '../screens/Cafe';
 import ChooseImage from '../screens/ChooseImage';
@@ -40,6 +41,7 @@ export type RootStackParamList = {
   Define: undefined;
   Map: undefined;
   Ai: { name: string; tripId?: string } | undefined;
+  AiAgent: undefined;
   EmailAuth: { isSignUp?: boolean } | undefined;
   Restaurants: { location: string } | undefined;
   Cafe: { location: string } | undefined;
@@ -95,6 +97,7 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen name="Define" component={DefineActivity} />
       <Stack.Screen name="Map" component={MapScreen} />
       <Stack.Screen name="Ai" component={AiScreen} />
+      <Stack.Screen name="AiAgent" component={AiAgent} />
       <Stack.Screen name="Restaurants" component={RestaurantsScreen} />
       <Stack.Screen name="Cafe" component={CafeScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />

@@ -164,7 +164,7 @@ const CreateTrip: React.FC = () => {
             >
                 <SafeAreaView style={{ flex: 1 }}>
 
-                    {/* Header */}
+       
                     <View style={styles.header}>
                         <Pressable onPress={() => navigation.goBack()}>
                             <Text style={styles.cancel}>Cancel</Text>
@@ -175,7 +175,7 @@ const CreateTrip: React.FC = () => {
                         </Pressable>
                     </View>
 
-                    {/* Body */}
+            
                     <View style={{ padding: 15 }}>
                         <DateRangePicker
                             onChange={setDates}
@@ -195,7 +195,7 @@ const CreateTrip: React.FC = () => {
                             style={styles.tripInput}
                         />
 
-                        {/* Itinerary */}
+            
                         <View style={styles.card}>
                             <View style={styles.cardHeader}>
                                 <AntDesign name="calendar" size={25} color="black" />
@@ -223,7 +223,7 @@ const CreateTrip: React.FC = () => {
                             </View>
                         </View>
 
-                        {/* Footer Cards */}
+    
                         <View style={styles.footerRow}>
                             <View style={styles.footerCard}>
                                 <FontAwesome name="globe" size={25} color="black" />

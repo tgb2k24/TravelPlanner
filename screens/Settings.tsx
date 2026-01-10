@@ -25,6 +25,30 @@ interface User {
     profileImage?: string;
 }
 
+const SettingItem = ({ icon, title, value, type, onPress, colors }: any) => (
+    <Pressable style={[styles.settingItem, { borderBottomColor: colors.border }]} onPress={onPress}>
+        <View style={styles.settingLeft}>
+            <View style={styles.iconContainer}>
+                <Ionicons name={icon} size={22} color="orange" />
+            </View>
+            <Text style={[styles.settingTitle, { color: colors.text }]}>{title}</Text>
+        </View>
+        <View style={styles.settingRight}>
+            {type === 'switch' && (
+                <Switch
+                    trackColor={{ false: '#767577', true: 'orange' }}
+                    thumbColor={value ? '#fff' : '#f4f3f4'}
+                    onValueChange={onPress}
+                    value={value}
+                />
+            )}
+            {type === 'arrow' && (
+                <Ionicons name="chevron-forward" size={20} color={colors.text} />
+            )}
+        </View>
+    </Pressable>
+);
+
 const SettingsScreen: React.FC = () => {
     const navigation = useNavigation();
     const { userId, setToken, setUserInfo } = useContext(AuthContext);
@@ -78,30 +102,6 @@ const SettingsScreen: React.FC = () => {
         );
     };
 
-    const SettingItem = ({ icon, title, value, type, onPress }: any) => (
-        <Pressable style={[styles.settingItem, { borderBottomColor: colors.border }]} onPress={onPress}>
-            <View style={styles.settingLeft}>
-                <View style={styles.iconContainer}>
-                    <Ionicons name={icon} size={22} color="orange" />
-                </View>
-                <Text style={[styles.settingTitle, { color: colors.text }]}>{title}</Text>
-            </View>
-            <View style={styles.settingRight}>
-                {type === 'switch' && (
-                    <Switch
-                        trackColor={{ false: '#767577', true: 'orange' }}
-                        thumbColor={value ? '#fff' : '#f4f3f4'}
-                        onValueChange={onPress}
-                        value={value}
-                    />
-                )}
-                {type === 'arrow' && (
-                    <Ionicons name="chevron-forward" size={20} color={colors.text} />
-                )}
-            </View>
-        </Pressable>
-    );
-
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme === 'dark' ? '#000' : '#f2f2f7' }]}>
             {/* Header */}
@@ -140,12 +140,14 @@ const SettingsScreen: React.FC = () => {
                         title="Edit Profile"
                         type="arrow"
                         onPress={() => console.log('Edit Profile')}
+                        colors={colors}
                     />
                     <SettingItem
                         icon="lock-closed-outline"
                         title="Change Password"
                         type="arrow"
                         onPress={() => console.log('Change Password')}
+                        colors={colors}
                     />
                     <SettingItem
                         icon="notifications-outline"
@@ -153,6 +155,7 @@ const SettingsScreen: React.FC = () => {
                         type="switch"
                         value={notificationsEnabled}
                         onPress={() => setNotificationsEnabled(!notificationsEnabled)}
+                        colors={colors}
                     />
                 </View>
 
@@ -164,6 +167,7 @@ const SettingsScreen: React.FC = () => {
                         title="Language"
                         type="arrow"
                         onPress={() => console.log('Language')}
+                        colors={colors}
                     />
                     <SettingItem
                         icon="moon-outline"
@@ -171,6 +175,7 @@ const SettingsScreen: React.FC = () => {
                         type="switch"
                         value={theme === 'dark'}
                         onPress={toggleTheme}
+                        colors={colors}
                     />
                 </View>
 
@@ -182,12 +187,14 @@ const SettingsScreen: React.FC = () => {
                         title="Help & Support"
                         type="arrow"
                         onPress={() => console.log('Help')}
+                        colors={colors}
                     />
                     <SettingItem
                         icon="information-circle-outline"
                         title="About App"
                         type="arrow"
                         onPress={() => console.log('About')}
+                        colors={colors}
                     />
                 </View>
 

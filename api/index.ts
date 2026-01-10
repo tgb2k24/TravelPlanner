@@ -7,8 +7,16 @@ import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import nodemailer from 'nodemailer';
 
+import dotenv from 'dotenv';
+import { AccessToken } from 'livekit-server-sdk';
 import Trip from './models/TripModel';
 import User from './models/user';
+
+dotenv.config();
+
+const LIVEKIT_API_KEY = 'APInzxJDarKowaG';
+const LIVEKIT_API_SECRET = 'lZIzFwfi71e1utKlhDAVFhFxeOrOxikTF6QUTAaeC3BA';
+
 
 /* -------------------- App Setup -------------------- */
 const app = express();
@@ -257,6 +265,27 @@ app.get('/user/:userId', async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error fetching user' });
   }
 });
+
+/* -------------------- LiveKit Token -------------------- */
+app.get('/livekit/token', async (req: Request, res: Response) => {
+  const roomName = req.query.roomName as string || 'default-room';
+  const participantName = req.query.participantName as string || 'user';
+
+  try {
+    const at = new AccessToken(LIVEKIT_API_KEY, LIVEKIT_API_SECRET, {
+      identity: participantName,
+    });
+
+    at.addGrant({ roomJoin: true, room: roomName });
+
+    const token = await at.toJwt();
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error('Error generating LiveKit token:', error);
+    res.status(500).json({ message: 'Error generating token' });
+  }
+});
+
 
 app.post(
   '/trips/:tripId/itinerary/:date',

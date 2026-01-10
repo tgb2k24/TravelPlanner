@@ -32,22 +32,27 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         loadTheme();
     }, []);
 
-    const toggleTheme = async () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-        await AsyncStorage.setItem('appTheme', newTheme);
-    };
+    // Use callback to stabilize function reference
+    const toggleTheme = React.useCallback(() => {
+        setTheme((prevTheme) => {
+            const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+            AsyncStorage.setItem('appTheme', newTheme).catch((e) => console.error(e));
+            return newTheme;
+        });
+    }, []);
 
-    const colors = {
+    const colors = React.useMemo(() => ({
         background: theme === 'light' ? '#FFFFFF' : '#000000',
         text: theme === 'light' ? '#000000' : '#FFFFFF',
         card: theme === 'light' ? '#FFFFFF' : '#1C1C1E', // Darker gray for cards in dark mode
         border: theme === 'light' ? '#E5E5EA' : '#38383A',
         tint: 'orange', // Keeping primary color consistent
-    };
+    }), [theme]);
+
+    const value = React.useMemo(() => ({ theme, toggleTheme, colors }), [theme, toggleTheme, colors]);
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme, colors }}>
+        <ThemeContext.Provider value={value}>
             {children}
         </ThemeContext.Provider>
     );
